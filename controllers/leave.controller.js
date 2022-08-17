@@ -11,17 +11,15 @@ exports.create = async (req, res) => {
         message: globalMessage.ContentEmpty,
       });
     }
-
-    const now = new Date();
+    // const now = new Date();
     // const value1 = date.format(now, "YYYY/MM/DD");
     // const value2 = date.format(now, "HH:mm:ss");
 
-    console.log("body " + req.body.userId);
     const leave = new Leave({
       userId: req.body.userId,
+      title: req.body.title,
       startTime: req.body.startTime,
       endTime: req.body.endTime,
-      reason: req.body.reason,
     });
 
     Leave.create(leave, (err, data) => {
@@ -33,7 +31,7 @@ exports.create = async (req, res) => {
           message: err.message,
         });
       } else {
-        res.status(400).json({
+        res.status(200).json({
           success: globalMessage.Success,
           code: globalMessage.SuccessCode,
           status: globalMessage.SuccessStatus,
@@ -124,7 +122,7 @@ exports.getHrs = async (req, res) => {
         console.log(">>>>>>>>>> ");
       }
 
-      console.log("Leave Hours >>> "+allhours)
+      console.log("Leave Hours >>> " + allhours);
       var whr = redTimes("09:00", allhours);
       console.log("Worked Hours >>> " + whr);
       if (err) {
@@ -142,6 +140,46 @@ exports.getHrs = async (req, res) => {
           status: globalMessage.SuccessStatus,
           workedhr: whr,
           leaveHr: allhours,
+          message: globalMessage.ItemReceived,
+        });
+      } else {
+        return res.status(400).send({
+          success: globalMessage.Success,
+          code: globalMessage.SuccessCode,
+          status: globalMessage.SuccessStatus,
+          data: data,
+          message: globalMessage.NoData,
+        });
+      }
+    });
+  } catch (error) {
+    return res.status(500).send({
+      success: globalMessage.NotSuccess,
+      code: globalMessage.ServerCode,
+      status: globalMessage.SeverErrorMessage,
+      message: error.message,
+    });
+  }
+};
+
+exports.getAllLeaves = async (req, res) => {
+  try {
+    Leave.getAllLeaves(req.params.id, (err, data) => {
+      console.log(">>>>> "+data[0].startDate)
+      if (err) {
+        return res.status(400).send({
+          success: globalMessage.NotSuccess,
+          code: globalMessage.BadCode,
+          status: globalMessage.SeverErrorMessage,
+          message: err.message,
+        });
+      }
+      if (data.length) {
+        return res.status(200).json({
+          success: globalMessage.Success,
+          code: globalMessage.SuccessCode,
+          status: globalMessage.SuccessStatus,
+          data: data,
           message: globalMessage.ItemReceived,
         });
       } else {
