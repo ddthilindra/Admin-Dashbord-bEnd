@@ -41,7 +41,7 @@ Leave.getLeaveHrs = (id, result) => {
 
 Leave.getAllLeaves = (id, result) => {
   sql.query(
-    `SELECT title, startTime as startDate,endTime as endDate FROM empleave WHERE userId ='${id}'`,
+    `SELECT Id as id,title, startTime as startDate,endTime as endDate FROM empleave WHERE userId ='${id}'`,
     (err, res) => {
       if (err) {
         result(err, "");
@@ -55,6 +55,50 @@ Leave.getAllLeaves = (id, result) => {
       return;
     }
   );
+};
+
+Leave.getLeaveById = (id, result) => {
+  sql.query(`SELECT * FROM empleave WHERE Id = ${id}`, (err, res) => {
+      if (err) {
+      result(err, "");
+      return;
+      }
+      if (res.length) {
+      result("", res);
+      return;
+      }
+      result("", "");
+      return;
+  });
+}
+
+Leave.delete = (id, result) => {
+  sql.query(`DELETE FROM empleave WHERE Id = ${id}`, (err, res) => {
+    if (err) {
+      result(err, "");
+      return;
+    }
+
+    if (res.affectedRows === 1) {
+      result("", res);
+      return;
+    }
+
+    result("", "");
+    return;
+  });
+}
+
+Leave.updateLeave = (id, updateLeave, result) => {
+  sql.query(`UPDATE empleave SET title='${updateLeave.title}',startTime='${updateLeave.startTime}',endTime='${updateLeave.endTime}' WHERE Id='${id}'`, (err, res) => {
+      if (err) {
+          console.log("error: ", err);
+          result(err, "");
+          return;
+      }
+
+      result("", { id: res.insertId, ...updateLeave });
+  });
 };
 
 module.exports = Leave;

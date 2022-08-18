@@ -165,7 +165,7 @@ exports.getHrs = async (req, res) => {
 exports.getAllLeaves = async (req, res) => {
   try {
     Leave.getAllLeaves(req.params.id, (err, data) => {
-      console.log(">>>>> "+data[0].startDate)
+      
       if (err) {
         return res.status(400).send({
           success: globalMessage.NotSuccess,
@@ -198,6 +198,103 @@ exports.getAllLeaves = async (req, res) => {
       code: globalMessage.ServerCode,
       status: globalMessage.SeverErrorMessage,
       message: error.message,
+    });
+  }
+};
+
+exports.delete = async (req, res) => {
+  try {
+    Leave.getLeaveById(req.params.id, async (err, data) => {
+      if (err) {
+        return res.status(400).json({
+          success: globalMessage.NotSuccess,
+          code: globalMessage.BadCode,
+          status: globalMessage.SeverErrorMessage,
+          message: err.message,
+        });
+      }
+      if (data.length) {
+        Leave.delete(req.params.id, (err, data) => {
+          if (err) {
+            return res.status(500).send({
+              success: globalMessage.NotSuccess,
+              code: globalMessage.ServerCode,
+              status: globalMessage.SeverErrorMessage,
+              message: err.message,
+            });
+          }
+          if (data.affectedRows === 1) {
+            return res.status(200).json({
+              success: globalMessage.Success,
+              code: globalMessage.SuccessCode,
+              status: globalMessage.SuccessStatus,
+              message: globalMessage.ItemDeletedMsg,
+            });
+          }
+        });
+      } else {
+        return res.status(200).json({
+          success: globalMessage.Success,
+          code: globalMessage.SuccessCode,
+          status: globalMessage.SuccessStatus,
+          data: data,
+          message: globalMessage.NoData,
+        });
+      }
+    });
+  } catch (error) {
+    return res.status(500).send({
+      success: globalMessage.NotSuccess,
+      code: globalMessage.ServerCode,
+      status: globalMessage.SeverErrorMessage,
+      message: error.message,
+    });
+  }
+}
+
+exports.update = async function (req, res) {
+  try {
+    Leave.getLeaveById(req.body.id, (err, data) => {
+      if (err) {
+        return res.status(500).send({
+          success: globalMessage.NotSuccess,
+          code: globalMessage.ServerCode,
+          status: globalMessage.SeverErrorMessage,
+          message: err.message
+        });
+      }
+      if (data.length) {
+        const updateLeave = new Leave({
+          title: req.body.title,
+          startTime: req.body.startTime,
+          endTime: req.body.endTime 
+        });
+        Leave.updateLeave(req.body.id, updateLeave, (err, data) => {
+          if (err) {
+            return res.status(500).send({
+              success: globalMessage.NotSuccess,
+              code: globalMessage.ServerCode,
+              status: globalMessage.SeverErrorMessage,
+              message: err.message
+            });
+          } else {
+            return res.status(200).json({
+              success: globalMessage.Success,
+              code: globalMessage.SuccessCode,
+              status: globalMessage.SuccessStatus,
+              document: data,
+              message: globalMessage.UpdateSuccessMessage,
+            });
+          }
+        });
+      }
+    });
+  } catch (e) {
+    return res.status(400).json({
+      success: globalMessage.NotSuccess,
+      code: globalMessage.BadCode,
+      status: globalMessage.BadMessage,
+      message: e.message,
     });
   }
 };
