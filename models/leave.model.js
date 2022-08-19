@@ -47,6 +47,7 @@ Leave.getAllLeaves = (id, result) => {
         result(err, "");
         return;
       }
+      //console.log(result.length)
       if (result.length) {
         result("", res);
         return;
@@ -90,6 +91,7 @@ Leave.delete = (id, result) => {
 }
 
 Leave.updateLeave = (id, updateLeave, result) => {
+  //console.log(updateLeave)
   sql.query(`UPDATE empleave SET title='${updateLeave.title}',startTime='${updateLeave.startTime}',endTime='${updateLeave.endTime}' WHERE Id='${id}'`, (err, res) => {
       if (err) {
           console.log("error: ", err);

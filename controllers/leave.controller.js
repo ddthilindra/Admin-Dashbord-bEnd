@@ -1,6 +1,7 @@
 const Leave = require("../models/leave.model");
 const globalMessage = require("../error/errors.message");
 const date = require("date-and-time");
+const moment = require ('moment');
 
 exports.create = async (req, res) => {
   try {
@@ -49,77 +50,48 @@ exports.create = async (req, res) => {
     });
   }
 };
+// Convert a time in hh:mm format to minutes
+function timeToMins(time) {
+  var b = time.split(":");
+  return b[0] * 60 + +b[1];
+}
 
+// Convert minutes to a time in format hh:mm
+// Returned value is in range 00  to 24 hrs
+function timeFromMins(mins) {
+  function z(n) {
+    return (n < 10 ? "0" : "") + n;
+  }
+  var h = ((mins / 60) | 0) % 24;
+  var m = mins % 60;
+  return z(h) + ":" + z(m);
+}
+
+// Add two times in hh:mm format
+function addTimes(t0, t1) {
+  return timeFromMins(timeToMins(t0) + timeToMins(t1));
+}
+function redTimes(t0, t1) {
+  return timeFromMins(timeToMins(t0) - timeToMins(t1));
+}
 exports.getHrs = async (req, res) => {
-  // Convert a time in hh:mm format to minutes
-  function timeToMins(time) {
-    var b = time.split(":");
-    return b[0] * 60 + +b[1];
-  }
-
-  // Convert minutes to a time in format hh:mm
-  // Returned value is in range 00  to 24 hrs
-  function timeFromMins(mins) {
-    function z(n) {
-      return (n < 10 ? "0" : "") + n;
-    }
-    var h = ((mins / 60) | 0) % 24;
-    var m = mins % 60;
-    return z(h) + ":" + z(m);
-  }
-
-  // Add two times in hh:mm format
-  function addTimes(t0, t1) {
-    return timeFromMins(timeToMins(t0) + timeToMins(t1));
-  }
-  function redTimes(t0, t1) {
-    return timeFromMins(timeToMins(t0) - timeToMins(t1));
-  }
-
   try {
     Leave.getLeaveHrs(req.params.id, (err, data) => {
       var allhours = "00:00";
       for (let x = 0; x < data.length; x++) {
         const element = data[x];
 
-        //var hours = Math.abs(val1 - val2) / 36e5;
-
-        //hours=date.format(element.endTime, "HH:mm:ss")-date.format(element.startTime, "HH:mm:ss");
-        //hours+=(element.endTime/(1000 * 60 * 60).toFixed(1))-(element.startTime/(1000 * 60 * 60).toFixed(1));
         let milliseconds = element.endTime - element.startTime;
 
-        // let seconds = Math.floor(milliseconds / 1000);
-        // let minutes = Math.floor(seconds / 60);
-        // let hours = Math.floor(minutes / 60);
-
-        // seconds = seconds % 60;
-        // minutes = minutes % 60;
-
-        // hours = hours % 24;
-
-        // const ms = hr;
-        //const ddd = new Date();
-        // const value1 = date.format(now, "YYYY/MM/DD");
-        //console.log(new Date(milliseconds).toISOString().slice(11, 16)); // 👉️ 15:00:00
         var prehr;
         prehr = allhours;
-        //console.log("pre " + prehr);
-        allhours = new Date(milliseconds).toISOString().slice(11, 16);
-        //console.log(allhours)
-        //console.log(hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0")); // 👉️ 15:00:00
 
-        // console.log(
-        //   ">>>>>>>>>> " + padTo2Digits(hours) + ":" + padTo2Digits(minutes)
-        // );
+        allhours = new Date(milliseconds).toISOString().slice(11, 16);
 
         allhours = addTimes(allhours, prehr);
-        //allhours+=tot;
+
         console.log(">>>>>>>>>> " + allhours);
 
-        // console.log(
-        //   ">>>>>>>>>> " +addTimes( hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0"),hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0"))
-        // );
-        console.log(">>>>>>>>>> ");
       }
 
       console.log("Leave Hours >>> " + allhours);
@@ -165,7 +137,7 @@ exports.getHrs = async (req, res) => {
 exports.getAllLeaves = async (req, res) => {
   try {
     Leave.getAllLeaves(req.params.id, (err, data) => {
-      
+      console.log(data);
       if (err) {
         return res.status(400).send({
           success: globalMessage.NotSuccess,
@@ -250,9 +222,12 @@ exports.delete = async (req, res) => {
       message: error.message,
     });
   }
-}
+};
 
 exports.update = async function (req, res) {
+  var t = "",
+    s = "",
+    e = "";
   try {
     Leave.getLeaveById(req.body.id, (err, data) => {
       if (err) {
@@ -260,22 +235,52 @@ exports.update = async function (req, res) {
           success: globalMessage.NotSuccess,
           code: globalMessage.ServerCode,
           status: globalMessage.SeverErrorMessage,
-          message: err.message
+          message: err.message,
         });
       }
       if (data.length) {
+        //console.log(req.body.title)
+        if (!req.body.title) {
+          t = data[0].title;
+          console.log("T " + t);
+        } else {
+          t = req.body.title;
+        }
+
+        if (!req.body.startTime) {
+          s = moment(data[0].startTime).format("YYYY/MM/D hh:mm:ss");
+          //console.log(d);
+          //console.log(data[0].startTime);
+          //s = date.format(data[0].startTime, "YYYY-MM-DD hh-mm-ss");
+          //s = data[0].startTime;
+          console.log("S " + s);
+        } else {
+          s = req.body.startTime;
+          console.log("S " + s);
+        }
+
+        if (!req.body.endTime) {
+          e = moment(data[0].endTime).format("YYYY/MM/D hh:mm:ss");
+         // e = date.format(data[0].endTime, "YYYY-MM-DD hh-mm-ss");
+          //e = data[0].endTime;
+          console.log("E " + e);
+        } else {
+          e = req.body.endTime;
+          console.log("E " + e);
+        }
         const updateLeave = new Leave({
-          title: req.body.title,
-          startTime: req.body.startTime,
-          endTime: req.body.endTime 
+          title: t,
+          startTime: s,
+          endTime: e,
         });
+        //console.log(updateLeave)
         Leave.updateLeave(req.body.id, updateLeave, (err, data) => {
           if (err) {
             return res.status(500).send({
               success: globalMessage.NotSuccess,
               code: globalMessage.ServerCode,
               status: globalMessage.SeverErrorMessage,
-              message: err.message
+              message: err.message,
             });
           } else {
             return res.status(200).json({
