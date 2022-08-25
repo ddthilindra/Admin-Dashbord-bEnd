@@ -173,6 +173,46 @@ exports.getAllHrs = async (req, res) => {
     });
   }
 };
+
+exports.getAllHrsById = async (req, res) => {
+  try {
+    Leave.getAllHrsById(req.params.id, (err, data) => {
+      //console.log(data);
+      if (err) {
+        return res.status(400).send({
+          success: globalMessage.NotSuccess,
+          code: globalMessage.BadCode,
+          status: globalMessage.SeverErrorMessage,
+          message: err.message,
+        });
+      }
+      if (data.length) {
+        return res.status(200).json({
+          success: globalMessage.Success,
+          code: globalMessage.SuccessCode,
+          status: globalMessage.SuccessStatus,
+          data: data,
+          message: globalMessage.ItemReceived,
+        });
+      } else {
+        return res.status(400).send({
+          success: globalMessage.Success,
+          code: globalMessage.SuccessCode,
+          status: globalMessage.SuccessStatus,
+          data: data,
+          message: globalMessage.NoData,
+        });
+      }
+    });
+  } catch (error) {
+    return res.status(500).send({
+      success: globalMessage.NotSuccess,
+      code: globalMessage.ServerCode,
+      status: globalMessage.SeverErrorMessage,
+      message: error.message,
+    });
+  }
+};
 exports.getAllLeaves = async (req, res) => {
   try {
     Leave.getAllLeaves(req.params.id, (err, data) => {
