@@ -1,7 +1,7 @@
 const Leave = require("../models/leave.model");
 const globalMessage = require("../error/errors.message");
 const date = require("date-and-time");
-const moment = require ('moment');
+const moment = require("moment");
 
 exports.create = async (req, res) => {
   try {
@@ -21,6 +21,8 @@ exports.create = async (req, res) => {
       title: req.body.title,
       startTime: req.body.startTime,
       endTime: req.body.endTime,
+      allDay: req.body.allDay,
+      status: req.body.status,
     });
 
     Leave.create(leave, (err, data) => {
@@ -91,7 +93,6 @@ exports.getHrs = async (req, res) => {
         allhours = addTimes(allhours, prehr);
 
         console.log(">>>>>>>>>> " + allhours);
-
       }
 
       console.log("Leave Hours >>> " + allhours);
@@ -136,7 +137,7 @@ exports.getHrs = async (req, res) => {
 
 exports.getAllHrs = async (req, res) => {
   try {
-    Leave.getAllHrs(req.params.id, (err, data) => {
+    Leave.getAllHrs((err, data) => {
       console.log(data);
       if (err) {
         return res.status(400).send({
@@ -340,7 +341,7 @@ exports.update = async function (req, res) {
 
         if (!req.body.endTime) {
           e = moment(data[0].endTime).format("YYYY/MM/D hh:mm:ss");
-         // e = date.format(data[0].endTime, "YYYY-MM-DD hh-mm-ss");
+          // e = date.format(data[0].endTime, "YYYY-MM-DD hh-mm-ss");
           //e = data[0].endTime;
           console.log("E " + e);
         } else {

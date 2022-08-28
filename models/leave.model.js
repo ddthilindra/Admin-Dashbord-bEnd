@@ -6,6 +6,8 @@ const Leave = function (data) {
   this.startTime = data.startTime;
   this.endTime = data.endTime;
   this.title = data.title;
+  this.allDay = data.allDay;
+  this.status = data.status;
 };
 
 Leave.create = (leave, result) => {
@@ -39,7 +41,7 @@ Leave.getLeaveHrs = (id, result) => {
   );
 };
 
-Leave.getAllHrs = (id, result) => {
+Leave.getAllHrs = (result) => {
   sql.query(
     //`SELECT Id as id,title, startTime as startDate,endTime as endDate FROM empleave WHERE userId ='${id}'`,
     //   `Select l.Id, u.firstName , u.lastName , u.user_type, CONCAT(DATE_FORMAT(l.startTime, "%Y %b "),( 1 + ((DATE_FORMAT( DATE_ADD(LAST_DAY( DATE_ADD(l.startTime,
@@ -50,12 +52,12 @@ Leave.getAllHrs = (id, result) => {
     // WHERE userId = '${id}'
     // GROUP BY WEEk(l.startTime)
     `Select u.Id, u.firstName , u.lastName , u.user_type, CONCAT(DATE_FORMAT(l.startTime, "%Y %b "),( 1 + ((DATE_FORMAT( DATE_ADD(LAST_DAY( DATE_ADD(l.startTime,
-    INTERVAL -1 MONTH)), INTERVAL 1 DAY),'%w')+1) + 
-    (DATE_FORMAT(l.startTime, '%d')-2) ) DIV 7)) as week, SEC_TO_TIME(SUM(TIME_TO_SEC(timediff(l.endTime, l.startTime)))) AS totalhours
-  FROM empleave l
-  INNER JOIN user u ON u.Id = l.userId
-  WHERE WEEKOFYEAR(l.startTime)=WEEKOFYEAR(CURDATE())
-  GROUP BY u.Id
+      INTERVAL -1 MONTH)), INTERVAL 1 DAY),'%w')+1) + 
+      (DATE_FORMAT(l.startTime, '%d')-2) ) DIV 7)) as week, SEC_TO_TIME(SUM(TIME_TO_SEC(timediff(l.endTime, l.startTime)))) AS totalhours
+    FROM empleave l
+    INNER JOIN user u ON u.Id = l.userId
+    WHERE WEEKOFYEAR(l.startTime)=WEEKOFYEAR(CURDATE()) AND status=2
+    GROUP BY u.Id
  `,
     (err, res) => {
       if (err) {
