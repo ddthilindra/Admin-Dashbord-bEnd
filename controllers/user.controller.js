@@ -18,7 +18,6 @@ exports.UserRegister = async function (req, res, next) {
   //     console.log(result, error);
   //   }
   // );
-
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   const saltHash = utils.genPassword(req.body.password);
@@ -51,7 +50,6 @@ exports.UserRegister = async function (req, res, next) {
         message: "Content can not be empty!",
       });
     }
-
     User.findByUserEmail(email, (err, data) => {
       if (data && data.length) {
         return res.status(200).json({
@@ -59,6 +57,7 @@ exports.UserRegister = async function (req, res, next) {
           message: `${email} is already exists`,
         });
       } else {
+        console.log("first")
         User.create(newUser, (err, data) => {
           if (err) {
             res.status(400).send({
