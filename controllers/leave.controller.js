@@ -305,10 +305,9 @@ exports.delete = async (req, res) => {
 };
 
 exports.update = async function (req, res) {
-  var t = "",
-    s = "",
+  var s = "",
     e = "";
-    console.log(req.body.status)
+  // console.log(req.body.status)
   try {
     Leave.getLeaveById(req.body.id, (err, data) => {
       if (err) {
