@@ -102,7 +102,7 @@ Leave.getAllHrsById = (id, result) => {
 Leave.getAllLeaves = (id, result) => {
   sql.query(
     //`SELECT Id as id,title, startTime as startDate,endTime as endDate FROM empleave WHERE userId ='${id}'`,
-    `SELECT Id as id,title, DATE_FORMAT(startTime, "%a %b %d %Y  %T") as startDate,DATE_FORMAT(endTime, "%a %b %d %Y  %T") as endDate FROM empleave WHERE userId ='${id}'`,
+    `SELECT Id as id,title, DATE_FORMAT(startTime, "%a %b %d %Y  %T") as startDate,DATE_FORMAT(endTime, "%a %b %d %Y  %T") as endDate,allDay,status FROM empleave WHERE userId ='${id}'`,
     (err, res) => {
       if (err) {
         result(err, "");
@@ -154,7 +154,7 @@ Leave.delete = (id, result) => {
 Leave.updateLeave = (id, updateLeave, result) => {
   //console.log(updateLeave)
   sql.query(
-    `UPDATE empleave SET title='${updateLeave.title}',startTime='${updateLeave.startTime}',endTime='${updateLeave.endTime}' WHERE Id='${id}'`,
+    `UPDATE empleave SET title='${updateLeave.title}',startTime='${updateLeave.startTime}',endTime='${updateLeave.endTime}',allDay='${updateLeave.allDay}',status='${updateLeave.status}' WHERE Id='${id}'`,
     (err, res) => {
       if (err) {
         console.log("error: ", err);

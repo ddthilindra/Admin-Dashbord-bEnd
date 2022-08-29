@@ -90,7 +90,7 @@ User.updateUser = (id, updatedUser, result) => {
 
 //getAllUsers
 User.getAllUsers = (result) => {
-  sql.query("SELECT * FROM user", (err, res) => {
+  sql.query("SELECT Id,firstName,lastName,email,contactNo,city,user_type FROM user", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result("", err);

@@ -92,12 +92,12 @@ exports.getHrs = async (req, res) => {
 
         allhours = addTimes(allhours, prehr);
 
-        console.log(">>>>>>>>>> " + allhours);
+        // console.log(">>>>>>>>>> " + allhours);
       }
 
-      console.log("Leave Hours >>> " + allhours);
+      // console.log("Leave Hours >>> " + allhours);
       var whr = redTimes("09:00", allhours);
-      console.log("Worked Hours >>> " + whr);
+      // console.log("Worked Hours >>> " + whr);
       if (err) {
         return res.status(400).send({
           success: globalMessage.NotSuccess,
@@ -138,7 +138,7 @@ exports.getHrs = async (req, res) => {
 exports.getAllHrs = async (req, res) => {
   try {
     Leave.getAllHrs((err, data) => {
-      console.log(data);
+      // console.log(data);
       if (err) {
         return res.status(400).send({
           success: globalMessage.NotSuccess,
@@ -217,7 +217,7 @@ exports.getAllHrsById = async (req, res) => {
 exports.getAllLeaves = async (req, res) => {
   try {
     Leave.getAllLeaves(req.params.id, (err, data) => {
-      console.log(data);
+      // console.log(data);
       if (err) {
         return res.status(400).send({
           success: globalMessage.NotSuccess,
@@ -308,6 +308,7 @@ exports.update = async function (req, res) {
   var t = "",
     s = "",
     e = "";
+    console.log(req.body.status)
   try {
     Leave.getLeaveById(req.body.id, (err, data) => {
       if (err) {
@@ -319,41 +320,20 @@ exports.update = async function (req, res) {
         });
       }
       if (data.length) {
-        //console.log(req.body.title)
-        if (!req.body.title) {
-          t = data[0].title;
-          console.log("T " + t);
-        } else {
-          t = req.body.title;
-        }
-
-        if (!req.body.startTime) {
+        if (data[0].startTime) {
           s = moment(data[0].startTime).format("YYYY/MM/D hh:mm:ss");
-          //console.log(d);
-          //console.log(data[0].startTime);
-          //s = date.format(data[0].startTime, "YYYY-MM-DD hh-mm-ss");
-          //s = data[0].startTime;
-          console.log("S " + s);
-        } else {
-          s = req.body.startTime;
-          console.log("S " + s);
         }
 
-        if (!req.body.endTime) {
+        if (data[0].endTime) {
           e = moment(data[0].endTime).format("YYYY/MM/D hh:mm:ss");
-          // e = date.format(data[0].endTime, "YYYY-MM-DD hh-mm-ss");
-          //e = data[0].endTime;
-          console.log("E " + e);
-        } else {
-          e = req.body.endTime;
-          console.log("E " + e);
         }
         const updateLeave = new Leave({
-          title: t,
-          startTime: s,
-          endTime: e,
+          title: req.body.title || data[0].title,
+          startTime: req.body.startTime || s,
+          endTime: req.body.endTime || e,
+          allDay: req.body.allDay || data[0].allDay,
+          status: req.body.status || data[0].status,
         });
-        //console.log(updateLeave)
         Leave.updateLeave(req.body.id, updateLeave, (err, data) => {
           if (err) {
             return res.status(500).send({
