@@ -15,7 +15,6 @@ const User = function (user) {
   this.user_type = user.user_type;
 };
 
-
 User.create = (newUser, result) => {
   sql.query("INSERT INTO user SET ?", newUser, (err, res) => {
     if (err) {
@@ -90,28 +89,56 @@ User.updateUser = (id, updatedUser, result) => {
 
 //getAllUsers
 User.getAllUsers = (result) => {
-  sql.query("SELECT Id,firstName,lastName,email,contactNo,city,user_type FROM user", (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result("", err);
-      return;
-    }
+  sql.query(
+    "SELECT Id,firstName,lastName,email,contactNo,city,user_type FROM user",
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result("", err);
+        return;
+      }
 
-    result("", res);
-  });
+      result("", res);
+    }
+  );
 };
 
 //getUserById
 User.getUserById = (id, result) => {
-  sql.query(`SELECT * FROM user WHERE id = '${id}'`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result("", err);
-      return;
-    }
+  sql.query(
+    `SELECT id,firstName,lastName,contactNo,city,user_type FROM user WHERE id = '${id}'`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result("", err);
+        return;
+      }
 
-    result("", res);
-  });
+      result("", res);
+    }
+  );
+};
+
+//getDashboardDetails
+User.getDashboardDetails = (id, result) => {
+  sql.query(
+    `Select u.Id, u.firstName , u.lastName , u.user_type, CONCAT(DATE_FORMAT(l.startTime, "%Y %b "),( 1 + ((DATE_FORMAT( DATE_ADD(LAST_DAY( DATE_ADD(l.startTime,
+    INTERVAL -1 MONTH)), INTERVAL 1 DAY),'%w')+1) + 
+    (DATE_FORMAT(l.startTime, '%d')-2) ) DIV 7)) as week, SEC_TO_TIME(SUM(TIME_TO_SEC(timediff(l.endTime, l.startTime)))) AS totalhours
+  FROM empleave l
+  INNER JOIN user u ON u.Id = l.userId
+  WHERE WEEKOFYEAR(l.startTime)=WEEKOFYEAR(CURDATE()) AND status=2 AND u.id = '${id}'
+  GROUP BY u.Id`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result("", err);
+        return;
+      }
+
+      result("", res);
+    }
+  );
 };
 
 //updateProfile profilePicture

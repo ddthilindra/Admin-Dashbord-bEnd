@@ -216,7 +216,8 @@ exports.getAllHrsById = async (req, res) => {
 };
 exports.getAllLeaves = async (req, res) => {
   try {
-    Leave.getAllLeaves(req.params.id, (err, data) => {
+    console.log(req.jwt.sub.id)
+    Leave.getAllLeaves(req.jwt.sub.id, (err, data) => {
       // console.log(data);
       if (err) {
         return res.status(400).send({

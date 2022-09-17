@@ -57,7 +57,6 @@ exports.UserRegister = async function (req, res, next) {
           message: `${email} is already exists`,
         });
       } else {
-        console.log("first")
         User.create(newUser, (err, data) => {
           if (err) {
             res.status(400).send({
@@ -111,13 +110,6 @@ exports.UserLogin = async function (req, res) {
         return res.status(201).json({
           success: false,
           message: "Invalid User email",
-        });
-      }
-
-      if (req.body.device_token !== user[0].device_token) {
-        return res.status(202).json({
-          success: false,
-          message: "Invalid Device Token",
         });
       }
 
@@ -328,6 +320,41 @@ exports.getAllUsers = async function (req, res) {
 exports.getUserById = async function (req, res) {
   try {
     User.getUserById(req.params.id, (err, data) => {
+      if (err) {
+        return res.status(500).send({
+          success: globalMessage.NotSuccess,
+          code: globalMessage.ServerCode,
+          status: globalMessage.SeverErrorMessage,
+          message: err.message,
+        });
+      }
+      if (data.length) {
+        return res.status(200).json({
+          success: globalMessage.Success,
+          code: globalMessage.SuccessCode,
+          status: globalMessage.SuccessStatus,
+          data: data,
+          message: "User details",
+        });
+      } else {
+        return res.status(200).json({
+          success: globalMessage.NotSuccess,
+          code: globalMessage.SuccessCode,
+          status: globalMessage.SuccessStatus,
+          data: data,
+          message: "No User found",
+        });
+      }
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ code: 500, success: false, message: "Internal Server Error" });
+  }
+};
+exports.getDashboardDetailsById = async function (req, res) {
+  try {
+    User.getDashboardDetails(req.jwt.sub.id, (err, data) => {
       if (err) {
         return res.status(500).send({
           success: globalMessage.NotSuccess,
