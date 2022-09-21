@@ -106,7 +106,7 @@ User.getAllUsers = (result) => {
 //getUserById
 User.getUserById = (id, result) => {
   sql.query(
-    `SELECT id,firstName,lastName,contactNo,city,user_type FROM user WHERE id = '${id}'`,
+    `SELECT id,firstName,lastName,email,contactNo,city,user_type FROM user WHERE id = '${id}'`,
     (err, res) => {
       if (err) {
         console.log("error: ", err);
