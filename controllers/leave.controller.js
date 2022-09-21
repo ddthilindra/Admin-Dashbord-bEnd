@@ -16,8 +16,9 @@ exports.create = async (req, res) => {
     // const value1 = date.format(now, "YYYY/MM/DD");
     // const value2 = date.format(now, "HH:mm:ss");
 
+    const id = req.jwt.sub.id;
     const leave = new Leave({
-      userId: req.body.userId,
+      userId: id,
       title: req.body.title,
       startTime: req.body.startTime,
       endTime: req.body.endTime,
@@ -216,8 +217,46 @@ exports.getAllHrsById = async (req, res) => {
 };
 exports.getAllLeaves = async (req, res) => {
   try {
-    console.log(req.jwt.sub.id)
     Leave.getAllLeaves(req.jwt.sub.id, (err, data) => {
+      // console.log(data);
+      if (err) {
+        return res.status(400).send({
+          success: globalMessage.NotSuccess,
+          code: globalMessage.BadCode,
+          status: globalMessage.SeverErrorMessage,
+          message: err.message,
+        });
+      }
+      if (data.length) {
+        return res.status(200).json({
+          success: globalMessage.Success,
+          code: globalMessage.SuccessCode,
+          status: globalMessage.SuccessStatus,
+          data: data,
+          message: globalMessage.ItemReceived,
+        });
+      } else {
+        return res.status(400).send({
+          success: globalMessage.Success,
+          code: globalMessage.SuccessCode,
+          status: globalMessage.SuccessStatus,
+          data: data,
+          message: globalMessage.NoData,
+        });
+      }
+    });
+  } catch (error) {
+    return res.status(500).send({
+      success: globalMessage.NotSuccess,
+      code: globalMessage.ServerCode,
+      status: globalMessage.SeverErrorMessage,
+      message: error.message,
+    });
+  }
+};
+exports.getAllLeavesById = async (req, res) => {
+  try {
+    Leave.getAllLeaves(req.params.id, (err, data) => {
       // console.log(data);
       if (err) {
         return res.status(400).send({

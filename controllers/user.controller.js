@@ -9,15 +9,8 @@ const {
 } = require("../validation");
 
 exports.UserRegister = async function (req, res, next) {
-  const { error } = userRegisterValidation(req.body);
 
-  // const result = await cloudinary.uploader.upload(
-  //   req.file.path,
-  //   { folder: "profilePicture" },
-  //   function (error, result) {
-  //     console.log(result, error);
-  //   }
-  // );
+  const { error } = userRegisterValidation(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   const saltHash = utils.genPassword(req.body.password);
@@ -31,14 +24,10 @@ exports.UserRegister = async function (req, res, next) {
     lastName: req.body.lastName,
     email: req.body.email,
     contactNo: req.body.contactNo,
-    // houseNumber: req.body.houseNumber,
-    // street: req.body.street,
     city: req.body.city,
-    // profilePicture: result.secure_url,
     user_type: req.body.user_type,
     hash: hash,
     salt: salt,
-    // device_token: req.body.device_token,
   });
 
   try {
@@ -73,6 +62,7 @@ exports.UserRegister = async function (req, res, next) {
               token: tokenObject.token,
               expiresIn: tokenObject.expires,
               sub: tokenObject.sub,
+              message: "Employee created successfully",
             });
           }
         });
@@ -128,6 +118,7 @@ exports.UserLogin = async function (req, res) {
           expiresIn: tokenObject.expires,
           sub: tokenObject.sub,
           user_type: user[0].user_type,
+          message: "Login successful",
         });
       } else {
         res.status(203).json({

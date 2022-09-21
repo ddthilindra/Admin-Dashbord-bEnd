@@ -3,18 +3,15 @@ const Joi = require("@hapi/joi");
 //User
 const userRegisterValidation = (data) => {
   const schema = Joi.object({
-    firstName: Joi.string().min(6).required(),
-    lastName: Joi.string().min(6).required(),
-    email: Joi.string().min(6).required().email(),
+    firstName: Joi.string().min(3).required(),
+    lastName: Joi.string().min(3).required(),
+    email: Joi.string().min(5).required().email(),
     contactNo: Joi.string()
       .regex(/^([+]\d{2})?\d{10}$/)
       .message("Phone number sholud be corrected")
       .required(),
-    // houseNumber: Joi.string().min(6).required(),
-    // street: Joi.string().min(6).required(),
-    city: Joi.string().min(6).required(),
+    city: Joi.string().min(3).required(),
     password: Joi.string().min(6).required(),
-    // device_token: Joi.string().required(),
     user_type: Joi.string(),
   });
   return schema.validate(data);
