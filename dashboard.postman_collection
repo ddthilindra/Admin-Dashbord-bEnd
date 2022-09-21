@@ -1,0 +1,297 @@
+{
+	"info": {
+		"_postman_id": "83109af0-ad61-4910-a76b-4fc45928691e",
+		"name": "Company",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15328209"
+	},
+	"item": [
+		{
+			"name": "Leave",
+			"item": [
+				{
+					"name": "addLeave",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"1\",\r\n    \"title\": \"title2\",\r\n    \"startTime\": \"2018-06-24T04:30:00\",\r\n    \"endTime\": \"2022-08-16 11:00:00\",\r\n    \"allDay\": true,\r\n    \"status\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/leave/addLeave",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"leave",
+								"addLeave"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getLeaveHrs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/leave/getLeaveHrs/1",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"leave",
+								"getLeaveHrs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllLeaves",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjEsImZpcnN0TmFtZSI6IkRlc2hpdGhhIiwibGFzdE5hbWUiOiJUaGlsaW5kcmEiLCJlbWFpbCI6ImRkdGhpbGluZHJhQGdtYWlsLmNvbSIsImNvbnRhY3RObyI6IjA3MDU1NzczNTUiLCJjaXR5IjoiTWF0YXJhIiwidXNlcl90eXBlIjoiRGV2ZWxvcGVyIn0sImlhdCI6MTY2Mzc2NzM5NzgyOSwiZXhwIjoxNjYzNzY4NjA3NDI5fQ.cmMCPtg6OTEUmFzStsgkZL4XLKMi3Ysb-q597xse_4w",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{localhost}}/leave/getAllLeaves",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"leave",
+								"getAllLeaves"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteLeave",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local-url}}/leave/deleteLeave/4",
+							"host": [
+								"{{local-url}}"
+							],
+							"path": [
+								"leave",
+								"deleteLeave",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateLeave",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"1\",\r\n    \"title\": \"title3\",\r\n    \"startTime\": \"2018-06-24 04:30:00\",\r\n    \"endTime\": \"2022-08-16 11:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local-url}}/leave/updateLeave/",
+							"host": [
+								"{{local-url}}"
+							],
+							"path": [
+								"leave",
+								"updateLeave",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllLeaveHrs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/leave/getAllLeaveHrs",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"leave",
+								"getAllLeaveHrs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllHrsById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/leave/getAllHrsById/1",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"leave",
+								"getAllHrsById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllLeavesById",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "UserRegistration",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Supun\",\r\n    \"lastName\": \"Lakshitha\",\r\n    \"email\": \"asdasdas@gmail.com\",\r\n    \"contactNo\": \"0705577355\",    \r\n    \"city\": \"Kandy\",    \r\n    \"user_type\": \"QA\",\r\n    \"password\":\"123123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/user/register",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UserLogin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"ddthilindra@gmail.com\",\r\n    \"password\":\"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/user/login",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/user/getUserById/1",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user",
+								"getUserById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllUsers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/user/getAllUsers",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user",
+								"getAllUsers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetDashboardDetailsById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjEsImZpcnN0TmFtZSI6IkRlc2hpdGhhIiwibGFzdE5hbWUiOiJUaGlsaW5kcmEiLCJlbWFpbCI6ImRkdGhpbGluZHJhQGdtYWlsLmNvbSIsImNvbnRhY3RObyI6IjA3MDU1NzczNTUiLCJjaXR5IjoibWF0YXJhIiwidXNlcl90eXBlIjoiZGV2ZWxvcGVyIn0sImlhdCI6MTY2MzQzMjU1Njk4MCwiZXhwIjoxNjYzNDMzNzY2NTgwfQ.7DyLPBJF3-AKJIz0MvJdAXR0kcfW39XxGK9LsDrstb0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{localhost}}/user/getDetailsById",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user",
+								"getDetailsById"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
